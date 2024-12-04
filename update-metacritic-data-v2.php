@@ -35,7 +35,6 @@ try {
     // $count = 0;
     
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo htmlspecialchars($row['titulo']) . "\n";
         
         $game_name = htmlspecialchars($row['titulo']);
 
@@ -46,7 +45,7 @@ try {
 
         $game_name = removeAcentos($game_name);
 
-        $game_name = preg_replace('/[^\p{L}\d\-:™®"\']/u', '', $game_name);
+        $game_name = preg_replace('/[^\p{L}\d\-:"\']/u', '', $game_name);
 
         $game_name = str_replace(' - ', '-', $game_name);
 
@@ -92,6 +91,7 @@ try {
                                     ':metacritic_url' => $metacritic_url,
                                     ':id' => $row['id']
                                 ]);
+                                echo $game_name . "\n";
                             }
                             $achou = true;
                             break;
