@@ -56,6 +56,10 @@ try {
         $game_name = str_replace('  ', ' ', $game_name);
 
         $game_name = str_replace(' ', '-', $game_name);
+
+        echo htmlspecialchars($row['titulo']) . "\n";
+        echo $game_name . "\n";
+
         
         $url = "https://www.metacritic.com/game/$game_name/critic-reviews/?platform=nintendo-switch";
 
@@ -91,7 +95,7 @@ try {
                                     ':metacritic_url' => $metacritic_url,
                                     ':id' => $row['id']
                                 ]);
-                                echo $game_name . "\n";
+                                echo "INSERIU O GAME";
                             }
                             $achou = true;
                             break;
@@ -105,7 +109,7 @@ try {
         }
 
         // if (++$count >= 20) break;
-
+        echo "\n";
     }
 } catch (PDOException $e) {
     // Trata erros de conexão ou execução
