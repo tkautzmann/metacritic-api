@@ -52,7 +52,7 @@ try {
 
         $game_name = str_replace('  ', ' ', $game_name);
 
-        $game_name = preg_replace('/[^\p{L}\d ]/u', '', $game_name);
+        $game_name = preg_replace('/[^\p{L}\d \-]/u', '', $game_name);
 
         $game_name = str_replace(' ', '-', $game_name);
 
