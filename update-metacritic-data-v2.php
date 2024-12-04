@@ -17,7 +17,7 @@ function removeAcentos($string) {
 // Configurações de conexão com o banco de dados
 $host = 'localhost';
 $dbname = 'nintendometro';
-$username = 'root';
+$username = 'adm_nintendometro';
 $password = 'ienh';
 
 try {
@@ -32,7 +32,7 @@ try {
     $stmt->execute();
 
     // Exibe os resultados
-    $count = 0;
+    // $count = 0;
     
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo htmlspecialchars($row['titulo']) . "\n";
@@ -41,19 +41,23 @@ try {
 
         $game_name = trim($game_name);
 
-        # convert spaces to -
-        $game_name = str_replace(' ', '-', $game_name);
-
-        # Remove &<space>
-        $game_name = str_replace('& ', '', $game_name);
-
         # lowercase
         $game_name = strtolower($game_name);
 
         $game_name = removeAcentos($game_name);
 
-        $game_name = preg_replace('/[^\p{L}\d\-]/u', '', $game_name);
+        $game_name = preg_replace('/[^\p{L}\d\-:™®"\']/u', '', $game_name);
 
+        $game_name = str_replace(' - ', '-', $game_name);
+
+        $game_name = str_replace('&', ' and ', $game_name);
+
+        $game_name = str_replace('+', ' and ', $game_name);
+
+        $game_name = str_replace('  ', ' ', $game_name);
+
+        $game_name = str_replace(' ', '-', $game_name);
+        
         $url = "https://www.metacritic.com/game/$game_name/critic-reviews/?platform=nintendo-switch";
 
         // Obter o HTML do website
@@ -100,7 +104,7 @@ try {
             }
         }
 
-        if (++$count >= 20) break;
+        // if (++$count >= 20) break;
 
     }
 } catch (PDOException $e) {
