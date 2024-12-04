@@ -36,7 +36,8 @@ try {
     
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         
-        $game_name = htmlspecialchars($row['titulo']);
+        // $game_name = htmlspecialchars($row['titulo']);
+        $game_name = $row['titulo'];
 
         $game_name = trim($game_name);
 
@@ -45,13 +46,13 @@ try {
 
         $game_name = removeAcentos($game_name);
 
-        $game_name = preg_replace('/[^\p{L}\d\-:"\']/u', '', $game_name);
+        $game_name = preg_replace('/[^\p{L}\d\-:"\'!]/u', '', $game_name);
 
         $game_name = str_replace(' - ', '-', $game_name);
 
         $game_name = str_replace('&', ' and ', $game_name);
 
-        $game_name = str_replace('+', ' and ', $game_name);
+        $game_name = str_replace('+', ' plus ', $game_name);
 
         $game_name = str_replace('  ', ' ', $game_name);
 
@@ -96,6 +97,7 @@ try {
                                     ':id' => $row['id']
                                 ]);
                                 echo "INSERIU O GAME";
+                                echo "\n";
                             }
                             $achou = true;
                             break;
