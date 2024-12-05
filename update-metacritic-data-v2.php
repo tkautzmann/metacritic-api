@@ -36,7 +36,7 @@ try {
     
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         
-        if($row['metascore'] != null) continue;
+        // if($row['metascore'] != null) continue;
 
         // $game_name = htmlspecialchars($row['titulo']);
         $game_name = $row['titulo'];
@@ -54,6 +54,7 @@ try {
         $game_name = preg_replace('/@$/', '', $game_name);
         $game_name = preg_replace('/™$/', '', $game_name);
         $game_name = preg_replace('/ for Nintendo Switch$/', '', $game_name);
+        $game_name = preg_replace('/ Digital Edition$/', '', $game_name);
         $game_name = str_replace('™ ', ' ', $game_name);
         $game_name = str_replace('™', ' ', $game_name);
         $game_name = str_replace(' - ', ' ', $game_name);
@@ -68,6 +69,7 @@ try {
         echo htmlspecialchars($row['titulo']) . "\n";
         echo $game_name . "\n";
 
+        // METASCORE
         
         $url = "https://www.metacritic.com/game/$game_name/critic-reviews/?platform=nintendo-switch";
 
@@ -103,7 +105,7 @@ try {
                                     ':metacritic_url' => $metacritic_url,
                                     ':id' => $row['id']
                                 ]);
-                                echo "INSERIU O GAME";
+                                echo "****** ATUALIZOU O METASCORE";
                                 echo "\n";
                             }
                             $achou = true;
@@ -117,7 +119,55 @@ try {
             }
         }
 
-        // if (++$count >= 20) break;
+        // USER SCORE
+        
+        $url = "https://www.metacritic.com/game/$game_name/user-reviews/?platform=nintendo-switch";
+
+        // Obter o HTML do website
+        @$html = file_get_contents($url);
+
+        if ($html){
+
+            // Criar um objeto DOMDocument
+            $dom = new DOMDocument();
+
+            // Carregar o HTML (suprimir warnings com @ caso o HTML não seja bem formatado)
+            @$dom->loadHTML($html);
+
+            // Procurar todas as tags específicas (exemplo: `<title>`)
+
+            $titleTags = $dom->getElementsByTagName("div");
+
+            $achou = false;
+
+            // Extrair o conteúdo da tag
+            foreach ($titleTags as $tag) {
+                foreach ($tag->attributes as $attribute) {
+                    if($attribute->nodeName == 'title'){
+                        if(trim($attribute->nodeValue) != ''){
+                            if (preg_match('/User score (\d+(\.\d+)?)/', $attribute->nodeValue, $matches)) {
+                                $userscore = $matches[1];
+                                $metacritic_userscore_url = $url;
+                                $updateSql = "UPDATE jogo SET userscore = :userscore, metacritic_userscore_url = :metacritic_userscore_url WHERE id = :id";
+                                $updateStmt = $pdo->prepare($updateSql);
+                                $updateStmt->execute([
+                                    ':userscore' => $userscore,
+                                    ':metacritic_userscore_url' => $metacritic_userscore_url,
+                                    ':id' => $row['id']
+                                ]);
+                                echo "****** ATUALIZOU O USERSCORE";
+                                echo "\n";
+                            }
+                            $achou = true;
+                            break;
+                        }
+                    };
+                }
+                if($achou){
+                    break;
+                }
+            }
+        }
         echo "\n";
     }
 } catch (PDOException $e) {
