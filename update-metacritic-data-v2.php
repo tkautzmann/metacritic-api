@@ -27,7 +27,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Prepara e executa a consulta
-    $sql = "SELECT id, titulo FROM jogo";
+    $sql = "SELECT id, titulo, metascore FROM jogo";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
@@ -36,6 +36,8 @@ try {
     
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         
+        if($row['metascore'] != null) continue;
+
         // $game_name = htmlspecialchars($row['titulo']);
         $game_name = $row['titulo'];
 
@@ -49,8 +51,12 @@ try {
         $game_name = str_replace('&', ' and ', $game_name);
 
         $game_name = str_replace('+', ' plus ', $game_name);
+        
+        $game_name = str_replace('™', '', $game_name);
 
         $game_name = str_replace(' - ', ' ', $game_name);
+
+        $game_name = str_replace(' – ', ' ', $game_name);
 
         $game_name = str_replace('  ', ' ', $game_name);
 
