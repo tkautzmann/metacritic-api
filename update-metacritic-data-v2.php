@@ -49,21 +49,18 @@ try {
         $game_name = removeAcentos($game_name);
 
         $game_name = str_replace('&', ' and ', $game_name);
-
         $game_name = str_replace('+', ' plus ', $game_name);
-        
+        $game_name = str_replace('™ ', ' ', $game_name);
         $game_name = str_replace('™', '', $game_name);
-
         $game_name = str_replace(' - ', ' ', $game_name);
-
         $game_name = str_replace(' – ', ' ', $game_name);
-
+        $game_name = str_replace('® ', ' ', $game_name);
+        $game_name = str_replace('®', ' ', $game_name);
+        $game_name = str_replace(' for Nintendo Switch', '', $game_name);
         $game_name = str_replace('  ', ' ', $game_name);
-
         $game_name = preg_replace('/[^\p{L}\d \-]/u', '', $game_name);
-
         $game_name = str_replace(' ', '-', $game_name);
-
+        
         echo htmlspecialchars($row['titulo']) . "\n";
         echo $game_name . "\n";
 
