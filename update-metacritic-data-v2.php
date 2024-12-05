@@ -55,7 +55,7 @@ try {
         $game_name = preg_replace('/™$/', '', $game_name);
         $game_name = preg_replace('/ for Nintendo Switch$/', '', $game_name);
         $game_name = str_replace('™ ', ' ', $game_name);
-        $game_name = str_replace('™', '', $game_name);
+        $game_name = str_replace('™', ' ', $game_name);
         $game_name = str_replace(' - ', ' ', $game_name);
         $game_name = str_replace(' : ', ' ', $game_name);
         $game_name = str_replace(' – ', ' ', $game_name);
